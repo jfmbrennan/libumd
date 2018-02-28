@@ -71,12 +71,13 @@ UMD.prototype.generate = function generate() {
 
     var defaultDeps = depsOptions['default'].items;
     var deps = defaultDeps ? defaultDeps || defaultDeps.items || [] : [];
-    var dependency, dependencyType, items, prefix, separator, suffix;
+    var dependency, dependencyType, items, orginalItems, prefix, separator, suffix;
 
     for (dependencyType in depsOptions) {
         dependency = depsOptions[dependencyType];
 
         items = dependency.items || defaultDeps || [];
+        orginalItems = items;
 
         // extract possible dependency names for objects
         items = items.map(function(item) {
@@ -94,7 +95,7 @@ UMD.prototype.generate = function generate() {
         ctx[dependencyType + 'Dependencies'] = {
             normal: items.map(function(item){ return 'root["' + item + '"]'; }),
             params: convertToAlphabet(items),
-            wrapped: items.map(wrap(prefix, suffix)).join(separator),
+            wrapped: orginalItems.map(wrap(prefix, suffix)).join(separator),
         };
     }
 
