@@ -122,12 +122,31 @@ function convertToAlphabet(items) {
     });
 }
 
+function getDependencyName(dep) {
+    return is.object(dep) ? Object.keys(dep)[0] : dep;
+}
+
+function getDependencyParams(dep) {
+    if(is.object(dep)) {
+        var key = Object.keys(dep)[0];
+        if (is.object(dep[key])) {
+            return Object.keys(dep[key])[0];
+        }
+    }
+    return false;
+}
+
 function wrap(pre, post) {
     pre = pre || '';
     post = post || '';
 
     return function (v) {
-        return pre + v + post;
+        var result = [];
+        var dependency = getDependencyName(v);
+        result.push(pre + dependency + post);
+        var params = getDependencyParams(v);
+        if (params) result.push(params);
+        return result.join('.');
     };
 }
 
